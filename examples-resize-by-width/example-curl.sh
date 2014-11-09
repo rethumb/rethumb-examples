@@ -1,0 +1,1 @@
+curl http://api.rethumb.com/v1/width/100/http://factor45.org/images/beach.jpg > beach.thumb.jpg
