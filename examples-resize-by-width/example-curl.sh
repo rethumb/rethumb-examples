@@ -1,1 +1,1 @@
-curl http://api.rethumb.com/v1/width/100/http://factor45.org/images/beach.jpg > beach.thumb.jpg
+curl http://api.rethumb.com/v1/width/100/http://images.rethumb.com/image_coimbra_600x300.jpg > resized-image.jpg

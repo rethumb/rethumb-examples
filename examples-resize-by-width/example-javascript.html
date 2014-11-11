@@ -9,10 +9,11 @@
                 imgElement.src = this.src;
             }
 
-            var width = 100; // New width in pixels.
-            var image = "http://factor45.org/images/beach.jpg";
+            var paramOperation = "width";
+            var paramValue = 100; // New width in pixels.
+            var imageURL = "http://images.rethumb.com/image_coimbra_600x300.jpg";
 
-            newImage.src = "http://api.rethumb.com/v1/width/" + width + "/" + image;
+            newImage.src = "http://api.rethumb.com/v1/" + paramOperation + "/" + paramValue + "/" + imageURL;
         }
         </script>
     </head>

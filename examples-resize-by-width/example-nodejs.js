@@ -1,11 +1,14 @@
-var http = require('http');
-var fs = require('fs');
+var http = require("http");
+var fs = require("fs");
 
-var width = 100; // New width in pixels.
-var image = "http://factor45.org/images/beach.jpg";
-var newImage = "beach.thumb.jpg";
+var paramOperation = "width";
+var paramValue = 100; // New width in pixels.
 
-var file = fs.createWriteStream(newImage);
-var request = http.get("http://api.rethumb.com/v1/width/" + width + "/" + image, function(response) {
-    response.pipe(file);
-});
+var imageURL = "http://images.rethumb.com/image_coimbra_600x300.jpg";
+var imageFilename = "resized-image.jpg";
+
+http.get("http://api.rethumb.com/v1/" + paramOperation + "/" + paramValue + "/" + imageURL,
+    function(response) {
+        response.pipe(fs.createWriteStream(imageFilename));
+    }
+);

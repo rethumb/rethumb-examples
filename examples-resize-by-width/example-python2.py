@@ -1,10 +1,12 @@
 import urllib2
 
-width = 100; # New width in pixels.
-image = "http://factor45.org/images/beach.jpg";
-newImage = "beach.thumb.jpg";
+param_operation = "width"
+param_value = 100 # New width in pixels.
 
-response = urllib2.urlopen("http://api.rethumb.com/v1/width/{0}/{1}".format(width, image))
-fh = open(newImage, "w")
+image_url = "http://images.rethumb.com/image_coimbra_600x300.jpg"
+image_filename = "resized-image.jpg"
+
+response = urllib2.urlopen("http://api.rethumb.com/v1/{0}/{1}/{2}".format(param_operation, param_value, image_url))
+fh = open(image_filename, "w")
 fh.write(response.read())
 fh.close()

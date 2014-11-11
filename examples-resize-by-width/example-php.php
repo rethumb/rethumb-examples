@@ -1,8 +1,9 @@
 <?php
-    $width = 100; // New width in pixels.
-    $image = "http://factor45.org/images/beach.jpg";
-    $newImage = "beach.thumb.jpg";
+    $param_operation = "width";
+    $param_value = 100; // New width in pixels.
+    
+    $image_url = "http://images.rethumb.com/image_coimbra_600x300.jpg";
+    $image_filename = "resized-image.jpg";
 
-    $thumbnail = file_get_contents("http://api.rethumb.com/v1/width/$width/$image");
-    file_put_contents($newImage, $thumbnail);
+    file_put_contents($image_filename, file_get_contents("http://api.rethumb.com/v1/$param_operation/$param_value/$image_url"));
 ?>

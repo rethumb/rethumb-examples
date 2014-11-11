@@ -6,13 +6,14 @@ class CsRethumbExample
 {
     static void Main()
     {
-        int width = 100; // New width in pixels.
-        string image = "http://factor45.org/images/beach.jpg";
-        string newImage = @"beach.thumb.jpg";
+        string paramOperation = "width";
+        int paramValue = 100; // New width in pixels.
+        string imageURL = "http://images.rethumb.com/image_coimbra_600x300.jpg";
+        string imageFilename = "resized-image.jpg";
 
         using (WebClient client = new WebClient())
         {
-            client.DownloadFile(string.Format("http://api.rethumb.com/v1/width/{0}/{1}", width, image), newImage);
+            client.DownloadFile(string.Format("http://api.rethumb.com/v1/{0}/{1}/{2}", paramOperation, paramValue, imageURL), imageFilename);
         }
     }
 }
