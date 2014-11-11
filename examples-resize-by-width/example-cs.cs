@@ -8,6 +8,7 @@ class CsRethumbExample
     {
         string paramOperation = "width";
         int paramValue = 100; // New width in pixels.
+        
         string imageURL = "http://images.rethumb.com/image_coimbra_600x300.jpg";
         string imageFilename = "resized-image.jpg";
 

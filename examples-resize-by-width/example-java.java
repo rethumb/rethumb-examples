@@ -9,6 +9,7 @@ public class JavaRethumbExample
     {
         String paramOperation = "width";
         int paramValue = 100; // New width in pixels.
+        
         String imageURL = "http://images.rethumb.com/image_coimbra_600x300.jpg";
         String imageFilename = "resized-image.jpg";
 
