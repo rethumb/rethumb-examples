@@ -1,0 +1,1 @@
+curl http://api.rethumb.com/v1/exif/all/http://images.rethumb.com/image_exif_1.jpg > exif.json

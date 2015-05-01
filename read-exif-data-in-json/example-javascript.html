@@ -1,0 +1,54 @@
+<html>
+    <head>
+        <script language = "JavaScript">
+        window.onload = function()
+        {
+            function createCORSRequest(method, url)
+            {
+                var xhr = new XMLHttpRequest();
+
+                if ("withCredentials" in xhr)
+                {
+                    xhr.open(method, url, true);
+                }
+                else if (typeof XDomainRequest !== "undefined")
+                {
+                    xhr = new XDomainRequest();
+                    xhr.open(method, url);
+                }
+                else
+                {
+                    xhr = null;
+                }
+
+                return xhr;
+            }
+
+            var xhr = createCORSRequest('GET', "http://api.rethumb.com/v1/exif/all/http://images.rethumb.com/image_exif_1.jpg");
+            
+            if (xhr)
+            {
+                xhr.send();
+
+                xhr.onload = function()
+                {
+                    document.getElementById('pre1').innerHTML = xhr.responseText;
+                };
+
+                xhr.onerror = function()
+                {
+                    document.getElementById('pre1').innerHTML = 'There was an error!';
+                };
+            }
+            else
+            {
+                document.getElementById('pre1').innerHTML = 'CORS not supported';
+            }
+        }
+        </script>
+    </head>
+
+    <body>
+        <pre id="pre1"></pre>
+    </body>
+</html>
