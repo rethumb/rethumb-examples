@@ -1,68 +1,76 @@
 package main
 
 import (
-	"fmt";
-	"net/http";
-	"io/ioutil";
-	"encoding/json";
-	"strings";
-	"strconv"
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
+	"strings"
+	"math"
 )
 
 func main() {
 	resp, err := http.Get("http://api.rethumb.com/v1/exif/all/http://images.rethumb.com/image_exif_1.jpg")
-	check(err)
+	if err != nil {
+		log.Fatal(err)
+	}
 	defer resp.Body.Close()
-	
+
 	body, err := ioutil.ReadAll(resp.Body)
-	check(err)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	var dat map[string]interface{}
+	var dat rethumbResponse
 	if err := json.Unmarshal(body, &dat); err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
-	fmt.Println(parseGPSCoordinates(dat))
+	fmt.Println(dat.GPS)
 }
 
-func check(e error) {
-	if e != nil {
-		panic(e)
-	}
+type rethumbResponse struct {
+	GPS GPS
 }
 
-func parseGPSCoordinates(data map[string]interface{}) string {
-	values := make(map[string]string)
-	gps := data["GPS"].(map[string]interface{})
-
-	values["LAT"] = gps["GPSLatitudeRef"].(string)
-	values["LONG"] = gps["GPSLongitudeRef"].(string)
-	values["LAT_DEG"] = applyDivision(gps["GPSLatitude"].([]interface{})[0].(string));
-	values["LAT_MIN"] = applyDivision(gps["GPSLatitude"].([]interface{})[1].(string));
-	values["LAT_SEC"] = applyDivision(gps["GPSLatitude"].([]interface{})[2].(string));
-	values["LONG_DEG"] = applyDivision(gps["GPSLongitude"].([]interface{})[0].(string));
-	values["LONG_MIN"] = applyDivision(gps["GPSLongitude"].([]interface{})[1].(string));
-	values["LONG_SEC"] = applyDivision(gps["GPSLongitude"].([]interface{})[2].(string));
-
-	return format("{LAT} {LAT_DEG}° {LAT_MIN}' {LAT_SEC}'' {LONG} {LONG_DEG}° {LONG_MIN}' {LONG_SEC}''", values);
+type GPS struct {
+	Lat       degMinSec `json:"GPSLatitude"`
+	LatLabel  string    `json:"GPSLatitudeRef"`
+	Long      degMinSec `json:"GPSLongitude"`
+	LongLabel string    `json:"GPSLongitudeRef"`
 }
 
-func applyDivision(value string) string {
-	tokens := strings.Split(value, "/");
-	n, _ := strconv.ParseFloat(tokens[0], 64)
-	d, _ := strconv.ParseFloat(tokens[1], 64)
-	r := n / d;
-	
-	if r == float64(int64(r)) {
-		return strconv.FormatInt(int64(r), 10)
-	} else {
-		return strconv.FormatFloat(r, 'f', 3, 64)
-	}
+func (gps GPS) String() string {
+	return fmt.Sprintf("%s%s %s%s", gps.Lat, gps.LatLabel, gps.Long, gps.LongLabel)
 }
 
-func format(str string, values map[string]string) string {
-	for key, value := range values {
-		str = strings.Replace(str, "{" + key + "}", value, -1);
-	}
+type degMinSec [3]precFloat
 
-	return str;
+func (d degMinSec) String() string {
+	return fmt.Sprintf("%v° %v' %v''", d[0], d[1], d[2])
+}
+
+type precFloat struct {
+	n    float64
+	prec int
+}
+
+func (f *precFloat) UnmarshalJSON(data []byte) error {
+	var s string
+	if err := json.Unmarshal(data, &s); err != nil {
+		return err
+	}
+	var prec string
+	if n, err := fmt.Sscanf(s, "%g/%s", &f.n, &prec); n != 2 || err != nil {
+		return fmt.Errorf("badly formed value %q", s)
+	}
+	if strings.TrimRight(prec, "0") != "1" {
+		return fmt.Errorf("precision is not power of 10")
+	}
+	f.prec = len(prec) - 1
+	return nil
+}
+
+func (f precFloat) String() string {
+	return fmt.Sprintf("%.*f", f.prec, f.n / math.Pow(10, float64(f.prec)))
 }
