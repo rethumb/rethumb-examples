@@ -1,0 +1,19 @@
+<html>
+    <head>
+        <script language = "JavaScript">
+        window.onload = function()
+        {
+            var newImage = new Image;
+            newImage.onload = function() {
+                document.getElementById("img1").src = this.src;
+            }
+
+            newImage.src = "http://api.rethumb.com/v1/width/100/http://factor45.org/images/beach.jpg";
+        }
+        </script>
+    </head>
+
+    <body>
+        <img id="img1">
+    </body>
+</html>
