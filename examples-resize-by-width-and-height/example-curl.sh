@@ -1,0 +1,1 @@
+curl http://api.rethumb.com/v1/height/100/width/100/http://images.rethumb.com/image_coimbra_600x300.jpg > resized-image.jpg
