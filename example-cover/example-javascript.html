@@ -1,0 +1,25 @@
+<html>
+    <head>
+        <script language = "JavaScript">
+        window.onload = function()
+        {
+            var newImage = new Image;
+            newImage.onload = function() {
+                var imgElement = document.getElementById("img1");
+                imgElement.src = this.src;
+            }
+
+            var paramOperation = "cover";
+            var paramValue = "150x200"; // New WIDTHxHEIGHT in pixels.
+            
+            var imageURL = "http://images.rethumb.com/image_coimbra_600x300.jpg";
+
+            newImage.src = "http://api.rethumb.com/v1/" + paramOperation + "/" + paramValue + "/" + imageURL;
+        }
+        </script>
+    </head>
+
+    <body>
+        <img id="img1">
+    </body>
+</html>
